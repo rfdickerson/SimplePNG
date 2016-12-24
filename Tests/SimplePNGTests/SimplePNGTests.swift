@@ -2,16 +2,21 @@ import XCTest
 @testable import SimplePNG
 
 class SimplePNGTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        XCTAssertEqual(SimplePNG().text, "Hello, World!")
+    
+    func testWrite() {
+        
+        let simplePNG = SimplePNG()
+        
+        let info = PictureInfo(width: 300, height: 200, colorType: ColorType.rgb, bitDepth: 16)
+        
+        simplePNG.writePNG(info: info)
+        
     }
 
 
     static var allTests : [(String, (SimplePNGTests) -> () throws -> Void)] {
         return [
-            ("testExample", testExample),
+            ("testWrite", testWrite),
         ]
     }
 }
