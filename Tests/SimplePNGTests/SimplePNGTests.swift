@@ -7,7 +7,7 @@ class SimplePNGTests: XCTestCase {
         
         let simplePNG = SimplePNG()
         
-        let info = PictureInfo(width: 300, height: 200, colorType: ColorType.rgb, bitDepth: 16)
+        let info = PictureInfo(width: 300, height: 200, colorType: ColorType.rgb, bitDepth: 8)
         
         simplePNG.writePNG(info: info)
         

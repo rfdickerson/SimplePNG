@@ -32,7 +32,9 @@ struct SimplePNG {
     
     func writePNG(info: PictureInfo) {
      
-        let row_pointers: [[UInt8]]
+        let row = [UInt8](repeating: 255, count: 300)
+        
+        let rows = [[UInt8]](repeating: row, count: 200)
         
         let fp = fopen("test.png", "wb")
         
@@ -48,13 +50,20 @@ struct SimplePNG {
         png_init_io(ptr, fp);
         png_set_sig_bytes(ptr, 8)
         
-        png_set_IHDR(ptr, info_ptr,
+        png_set_IHDR(ptr,
+                     info_ptr,
                      png_uint_32(info.width), png_uint_32(info.height),
-                     Int32(info.bitDepth), info.colorType.value, PNG_INTERLACE_NONE,
-                     PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+                     Int32(info.bitDepth),
+                     info.colorType.value,
+                     PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
+        png_write_info(ptr, info_ptr);
+        
         // write the bytes
-        png_write_image(ptr, row_pointers);
+        for row in rows {
+            png_write_row(ptr, row);
+        }
+
         
         png_write_end(ptr, nil);
         
