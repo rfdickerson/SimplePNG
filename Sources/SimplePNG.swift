@@ -4,7 +4,6 @@ enum ColorType {
     
     case grey
     case rgb
-
     
     var value: Int32 {
         switch self {
@@ -32,9 +31,9 @@ struct SimplePNG {
     
     func writePNG(info: PictureInfo) {
      
-        let row = [UInt8](repeating: 255, count: 300)
+        let row = [UInt8](repeating: 128, count: 3*info.width)
         
-        let rows = [[UInt8]](repeating: row, count: 200)
+        let rows = [[UInt8]](repeating: row, count: info.height)
         
         let fp = fopen("test.png", "wb")
         
@@ -48,14 +47,19 @@ struct SimplePNG {
         let info_ptr = png_create_info_struct(ptr);
         
         png_init_io(ptr, fp);
-        png_set_sig_bytes(ptr, 8)
+        // png_set_sig_bytes(ptr, 8)
+        
+        print("Color type is \(info.colorType.value)")
         
         png_set_IHDR(ptr,
                      info_ptr,
-                     png_uint_32(info.width), png_uint_32(info.height),
+                     png_uint_32(info.width),
+                     png_uint_32(info.height),
                      Int32(info.bitDepth),
                      info.colorType.value,
-                     PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+                     PNG_INTERLACE_NONE,
+                     PNG_COMPRESSION_TYPE_DEFAULT,
+                     PNG_FILTER_TYPE_DEFAULT);
 
         png_write_info(ptr, info_ptr);
         
