@@ -3,6 +3,11 @@ import CPNG
 
 typealias Pixel = UInt8
 
+enum SimpleImageError: Error {
+    case writeError
+    case readError
+}
+
 public enum ColorType {
     
     case grey
@@ -18,32 +23,40 @@ public enum ColorType {
     }
 }
 
-public struct ImageInfo {
+public class Image {
     
-    let width: Int
-    let height: Int
-    let colorType: ColorType
-    let bitDepth: png_byte
+    var width: Int
+    var height: Int
+    var colorType: ColorType
+    var bitDepth: Int
     
+    var rows: [[Pixel]]?
+    
+    init(width: Int,
+         height: Int,
+         colorType: ColorType,
+         bitDepth: Int,
+         rows: [[Pixel]]? = nil) {
+        
+        self.width = width
+        self.height = height
+        self.colorType = colorType
+        self.bitDepth = bitDepth
+        self.rows = rows
+        
+    }
 }
 
-public struct Image {
-    let info: ImageInfo
-    let rows: [[Pixel]]
-}
+extension Image {
 
-struct SimplePNG {
-
-    func write(image: Image, to url: URL) {
+    func write(to url: URL) throws {
      
-        let info = image.info
         let fp = fopen(url.relativeString, "wb")
         
         let pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nil, nil, nil);
         
         guard let ptr = pngPtr else {
-            print("Could not write struct")
-            return
+            throw SimpleImageError.writeError
         }
         
         let info_ptr = png_create_info_struct(ptr);
@@ -51,22 +64,24 @@ struct SimplePNG {
         png_init_io(ptr, fp);
         // png_set_sig_bytes(ptr, 8)
         
-        print("Color type is \(info.colorType.value)")
-        
         png_set_IHDR(ptr,
                      info_ptr,
-                     png_uint_32(info.width),
-                     png_uint_32(info.height),
-                     Int32(info.bitDepth),
-                     info.colorType.value,
+                     png_uint_32(width),
+                     png_uint_32(height),
+                     Int32(bitDepth),
+                     colorType.value,
                      PNG_INTERLACE_NONE,
                      PNG_COMPRESSION_TYPE_DEFAULT,
                      PNG_FILTER_TYPE_DEFAULT);
 
         png_write_info(ptr, info_ptr);
         
+        guard let rows = rows else {
+            throw SimpleImageError.writeError
+        }
+        
         // write the bytes
-        for row in image.rows {
+        for row in rows {
             png_write_row(ptr, row);
         }
 

@@ -5,10 +5,6 @@ class SimplePNGTests: XCTestCase {
     
     func testWrite() {
 
-        let simplePNG = SimplePNG()
-        
-        let info = ImageInfo(width: 300, height: 200, colorType: ColorType.rgb, bitDepth: 8)
-        
         var rows = [[UInt8]]()
         
         for x in 1...200 {
@@ -19,20 +15,24 @@ class SimplePNGTests: XCTestCase {
                 
                 let red =   Double(y) / 300.0 * 255.0
                 let green = Double(x) / 200.0 * 255.0
-                //let red = 255.0
+                let blue = 128.0
                 
                 row.append(UInt8(red))
                 row.append(UInt8(green))
-                row.append(128)
+                row.append(UInt8(blue))
                 
             }
             
             rows.append(row)
         }
         
-        let image = Image(info: info, rows: rows)
+        let image = Image(width: 300,
+                          height: 200,
+                          colorType: ColorType.rgb,
+                          bitDepth: 8,
+                          rows: rows)
         
-        simplePNG.write(image: image, to: URL(fileURLWithPath: "colorimage.png"))
+        try! image.write(to: URL(fileURLWithPath: "colorimage.png"))
         
     }
 
