@@ -1,6 +1,6 @@
 import CPNG
 
-enum ColorType {
+public enum ColorType {
     
     case grey
     case rgb
@@ -15,7 +15,7 @@ enum ColorType {
     }
 }
 
-struct PictureInfo {
+public struct PictureInfo {
     
     let width: Int
     let height: Int
@@ -26,14 +26,9 @@ struct PictureInfo {
 
 struct SimplePNG {
 
-    var text = "Hello, World!"
-    
-    
-    func writePNG(info: PictureInfo) {
+    func writePNG(rows: [[UInt8]], info: PictureInfo) {
      
-        let row = [UInt8](repeating: 128, count: 3*info.width)
-        
-        let rows = [[UInt8]](repeating: row, count: info.height)
+
         
         let fp = fopen("test.png", "wb")
         
