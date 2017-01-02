@@ -7,9 +7,15 @@ class SimplePNGTests: XCTestCase {
 
         let simplePNG = SimplePNG()
         
-        let info = PictureInfo(width: 300, height: 200, colorType: ColorType.rgb, bitDepth: 8)
+        let info = ImageInfo(width: 300, height: 200, colorType: ColorType.rgb, bitDepth: 8)
         
         var rows = [[UInt8]]()
+        
+        let t = zip(1...200, 1...300)
+        
+        t.forEach() {
+            print($0)
+        }
         
         for x in 1...200 {
             
@@ -30,10 +36,9 @@ class SimplePNGTests: XCTestCase {
             rows.append(row)
         }
         
-//        let row = [UInt8](repeating: 128, count: 3*info.width)
-//        let rows = [[UInt8]](repeating: row, count: info.height)
+        let image = Image(info: info, rows: rows)
         
-        simplePNG.writePNG(rows: rows, info: info)
+        simplePNG.write(image: image, to: URL(fileURLWithPath: "colorimage.png"))
         
     }
 

@@ -1,4 +1,7 @@
+import Foundation
 import CPNG
+
+typealias Pixel = UInt8
 
 public enum ColorType {
     
@@ -15,7 +18,7 @@ public enum ColorType {
     }
 }
 
-public struct PictureInfo {
+public struct ImageInfo {
     
     let width: Int
     let height: Int
@@ -24,13 +27,17 @@ public struct PictureInfo {
     
 }
 
+public struct Image {
+    let info: ImageInfo
+    let rows: [[Pixel]]
+}
+
 struct SimplePNG {
 
-    func writePNG(rows: [[UInt8]], info: PictureInfo) {
+    func write(image: Image, to url: URL) {
      
-
-        
-        let fp = fopen("test.png", "wb")
+        let info = image.info
+        let fp = fopen(url.relativeString, "wb")
         
         let pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, nil, nil, nil);
         
@@ -59,7 +66,7 @@ struct SimplePNG {
         png_write_info(ptr, info_ptr);
         
         // write the bytes
-        for row in rows {
+        for row in image.rows {
             png_write_row(ptr, row);
         }
 
