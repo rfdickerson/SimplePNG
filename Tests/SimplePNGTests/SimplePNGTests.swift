@@ -11,20 +11,14 @@ class SimplePNGTests: XCTestCase {
         
         var rows = [[UInt8]]()
         
-        let t = zip(1...200, 1...300)
-        
-        t.forEach() {
-            print($0)
-        }
-        
         for x in 1...200 {
             
             var row = [UInt8]()
             
             for y in 1...300 {
                 
-                let red = Double(y)/300.0 * 255.0
-                let green = Double(x)/200.0 * 255.0
+                let red =   Double(y) / 300.0 * 255.0
+                let green = Double(x) / 200.0 * 255.0
                 //let red = 255.0
                 
                 row.append(UInt8(red))
